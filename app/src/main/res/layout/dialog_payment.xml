@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="8dp"
+        android:padding="8dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_cancel"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/layoutViews"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/imgCancel"
+            app:layout_constraintBottom_toTopOf="@id/tvDownload">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutInvoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:srcCompat="@drawable/ic_bkash_logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/imgLogo" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvTransaction"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/transaction_receipt"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textAllCaps="true"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvAddress" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvTransaction"
+                    android:layout_margin="8dp"
+                    android:background="@color/bg_color"
+                    android:padding="4dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPaymentMethod"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/payment_method"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPaymentMethodValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bkash"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/amount"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layoutTitle" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvAmountValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment"
+                    android:textColor="@color/black"
+                    android:gravity="right"
+                    android:ellipsize="marquee"
+                    android:maxLines="1"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@id/tvAmount"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvAmount"
+                    tools:ignore="RtlHardcoded" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/transaction_date"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvAmount" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvDateValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:gravity="right"
+                    android:ellipsize="marquee"
+                    android:maxLines="1"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@id/tvDate"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvDate"
+                    tools:ignore="RtlHardcoded" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvNarration"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/narration"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvDate" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvNarrationValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:gravity="right"
+                    android:ellipsize="marquee"
+                    android:maxLines="1"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tvNarration"
+                    app:layout_constraintTop_toTopOf="@id/tvNarration"
+                    tools:ignore="RtlHardcoded" />
+
+                <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/account_number"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvNarration" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvNumberValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:gravity="right"
+                    android:ellipsize="marquee"
+                    android:maxLines="1"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@id/tvNumber"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvNumber"
+                    tools:ignore="RtlHardcoded" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/account_name"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvNumber" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvNameValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:gravity="end"
+                    android:maxLines="1"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@id/tvName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvName"/>
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvName"
+                    android:background="@color/text_color"
+                    android:layout_margin="8dp"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvTotal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view1" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvTotalValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginEnd="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvTotal"/>
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgSuccess"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="16dp"
+                    app:srcCompat="@drawable/img_success"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvTotalValue"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvDownload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_receipt"
+            android:gravity="center_horizontal"
+            android:textColor="@color/text_color"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/imgShare"
+            app:layout_constraintTop_toBottomOf="@id/layoutViews"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_share"
+            app:layout_constraintStart_toEndOf="@id/tvDownload"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvDownload"
+            app:layout_constraintBottom_toBottomOf="@id/tvDownload"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

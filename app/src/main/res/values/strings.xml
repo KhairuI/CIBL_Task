@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">CIBL_Task</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="payment">Payment</string>
+    <string name="payment_method">Paid with</string>
+    <string name="payment_option">Choose your payment option</string>
+    <string name="bkash">Bkash</string>
+    <string name="nagad">Nagad</string>
+    <string name="confirm">Confirm Payment</string>
+    <string name="enter_number">Enter your %1$s account number</string>
+    <string name="missing_number">Your account number is empty</string>
+    <string name="invalid_number">Your account number must be 11 digits</string>
+    <string name="account_number">Account Number</string>
+    <string name="enter_name">Enter your %1$s account holder name</string>
+    <string name="missing_name">Your account holder name is empty</string>
+    <string name="account_name">Account Name</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="missing_amount">Your amount is empty</string>
+    <string name="amount">Amount</string>
+    <string name="narration">Narration</string>
+    <string name="missing_narration">Your narration is empty</string>
+    <string name="transaction_receipt">Transaction Receipt</string>
+    <string name="transaction_date">Transaction Time</string>
+    <string name="total">Total</string>
+    <string name="download_receipt">Download Receipt</string>
+
+</resources>
