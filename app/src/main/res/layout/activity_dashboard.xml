@@ -52,112 +52,9 @@
             android:layout_margin="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/cardBkash"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardBkash"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="6dp"
-            android:layout_margin="12dp"
-            android:clickable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvOption"
-            app:strokeColor="@color/text_color"
-            app:strokeWidth="1dp"
-            android:focusable="true">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgBkash"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    app:srcCompat="@drawable/ic_bkash_logo"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvBkash"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_color"
-                    android:textSize="18sp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textStyle="bold"
-                    android:text="@string/bkash"
-                    android:layout_marginStart="12dp"
-                    app:layout_constraintStart_toEndOf="@id/imgBkash"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardNagad"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="6dp"
-            android:layout_margin="12dp"
-            android:clickable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardBkash"
-            app:strokeColor="@color/text_color"
-            app:strokeWidth="1dp"
-            android:focusable="true">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgNagad"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    app:srcCompat="@drawable/ic_nagad_logo"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_color"
-                    android:textSize="18sp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textStyle="bold"
-                    android:text="@string/nagad"
-                    android:layout_marginStart="12dp"
-                    app:layout_constraintStart_toEndOf="@id/imgNagad"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-
-
-        <!--<androidx.recyclerview.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listPayment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -165,9 +62,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvOption"
             tools:itemCount="4"
-            android:visibility="gone"
+            android:layout_marginTop="4dp"
             tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/list_item_text" />-->
+            tools:listitem="@layout/list_item_payment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

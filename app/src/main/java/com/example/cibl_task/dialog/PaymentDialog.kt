@@ -2,13 +2,13 @@ package com.example.cibl_task.dialog
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.pdf.PdfDocument
-import android.graphics.pdf.PdfDocument.PageInfo
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,16 +17,16 @@ import android.view.Window
 import androidx.core.os.bundleOf
 import com.example.cibl_task.base.BaseDialogFragment
 import com.example.cibl_task.databinding.DialogPaymentBinding
+import com.example.cibl_task.model.ActionType
 import com.example.cibl_task.model.PaymentModel
 import com.example.cibl_task.utils.DataSourceUtils
 import java.io.File
 import java.io.FileNotFoundException
-import java.io.FileOutputStream
 import java.io.IOException
+import java.util.Objects
 
 
 class PaymentDialog : BaseDialogFragment() {
-
 
     private var _binding: DialogPaymentBinding? = null
     private val binding get() = _binding!!
@@ -74,35 +74,48 @@ class PaymentDialog : BaseDialogFragment() {
         }
 
         binding.imgCancel.setOnClickListener { cancel?.invoke().also { dismiss() } }
-        binding.tvDownload.setOnClickListener { createPDF() }
-        binding.imgShare.setOnClickListener { }
+        binding.tvDownload.setOnClickListener { downloadPDF(ActionType.Save) }
+        binding.imgShare.setOnClickListener { downloadPDF(ActionType.Share) }
     }
 
-    private fun createPDF() {
-        var bitmap = DataSourceUtils.getViewToBitmap(binding.layoutInvoice)
-        val document = PdfDocument()
-        val pageInfo = PageInfo.Builder(bitmap.width, bitmap.height, 1).create()
-        val page = document.startPage(pageInfo)
-
-        val canvas = page.canvas
-        val paint = Paint()
-        paint.color = Color.WHITE
-        canvas.drawPaint(paint)
-
-        bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.width, bitmap.height, true)
-        canvas.drawBitmap(bitmap, 0f, 0f, null)
-        document.finishPage(page)
-
-        val downloadsDir =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val filePath = File(downloadsDir, "Payment_Receipt.pdf")
-
+    private fun downloadPDF(type: ActionType) {
+        val pdfDocument =
+            DataSourceUtils.createPDF(DataSourceUtils.getViewToBitmap(binding.layoutInvoice))
         try {
-            val fos = FileOutputStream(filePath)
-            document.writeTo(fos)
-            document.close()
-            fos.close()
-            downloadSuccess?.invoke().also { dismiss() }
+
+                val contentResolver: ContentResolver = requireContext().contentResolver
+                val contentValues = ContentValues()
+                contentValues.put(
+                    MediaStore.MediaColumns.DISPLAY_NAME,
+                    "CIBL${DataSourceUtils.getCurrentDateTime()}.pdf"
+                )
+                contentValues.put(
+                    MediaStore.MediaColumns.RELATIVE_PATH,
+                    Environment.DIRECTORY_DOCUMENTS + File.separator + "CIBLFolder"
+                )
+                val pdfUri = contentResolver.insert(
+                    MediaStore.Files.getContentUri("external"),
+                    contentValues
+                )
+
+                val fos = contentResolver.openOutputStream(Objects.requireNonNull(pdfUri)!!)
+                Objects.requireNonNull(fos)
+                pdfDocument.writeTo(fos)
+                pdfDocument.close()
+                fos?.close()
+
+                when (type) {
+                    ActionType.Save -> {
+                        downloadSuccess?.invoke().also { dismiss() }
+                    }
+
+                    ActionType.Share -> {
+                        val share = Intent(Intent.ACTION_SEND)
+                        share.setType("application/pdf")
+                        share.putExtra(Intent.EXTRA_STREAM, pdfUri)
+                        startActivity(Intent.createChooser(share, "Share Via"))
+                    }
+                }
 
         } catch (e: FileNotFoundException) {
             Log.d("xxx", "Error while writing $e")

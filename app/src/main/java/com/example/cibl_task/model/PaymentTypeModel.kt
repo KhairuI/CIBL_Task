@@ -6,5 +6,5 @@ import java.io.Serializable
 data class PaymentTypeModel(
     var title: String? = null,
     var resource: Int? = null,
-    var type: PaymentType? = null
+    var type: PaymentType
 ):Serializable

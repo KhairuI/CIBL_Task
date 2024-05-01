@@ -8,8 +8,6 @@ import android.location.LocationManager
 import android.util.Log
 import com.google.android.gms.location.LocationRequest
 import androidx.core.content.ContextCompat
-import com.example.cibl_task.adapter.PaymentAdapter
-import com.example.cibl_task.model.PaymentTypeModel
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest

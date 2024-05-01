@@ -54,7 +54,7 @@ class PaymentActivity : BaseActivity() {
         )
 
         val dialog = PaymentDialog.newInstance(model)
-        dialog.isCancelable = true
+        dialog.isCancelable = false
         dialog.downloadSuccess {
             Toast.makeText(this, "Download Successfully", Toast.LENGTH_SHORT).show()
             finish()

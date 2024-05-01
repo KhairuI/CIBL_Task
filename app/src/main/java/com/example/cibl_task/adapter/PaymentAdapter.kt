@@ -1,60 +1,60 @@
 package com.example.cibl_task.adapter
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import com.example.cibl_task.R
+import com.example.cibl_task.base.BaseViewHolder
 import com.example.cibl_task.databinding.ListItemPaymentBinding
-import com.example.cibl_task.databinding.ListItemTextBinding
 import com.example.cibl_task.model.PaymentTypeModel
 
-class PaymentAdapter(
-    private val listener: OnClickListener
-) : RecyclerView.Adapter<PaymentAdapter.PaymentViewHolder>() {
+class PaymentAdapter : ListAdapter<PaymentTypeModel, BaseViewHolder>(DiffCallback) {
 
-    private var paymentTypeList: MutableList<PaymentTypeModel> = mutableListOf()
+    private var clicked: ((type: PaymentTypeModel) -> Unit)? = null
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): PaymentViewHolder {
-        Log.d("xxx", "onCreateViewHolder")
-        return PaymentViewHolder(
-            ListItemTextBinding.inflate(
-                LayoutInflater.from(viewGroup.context),
-                viewGroup,
-                false
-            )
-        )
-    }
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) = holder.onBind(position)
 
-    override fun getItemCount(): Int {
-        Log.d("xxx", "item count: ${paymentTypeList.size}")
-        return if (paymentTypeList.isEmpty()) 0 else paymentTypeList.size
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.list_item_payment, parent, false)
+    )
 
-    override fun onBindViewHolder(holder: PaymentViewHolder, position: Int) {
-        val type = paymentTypeList[position]
-        Log.d("xxx", "onBindViewHolder: $type")
-        holder.binding.apply {
+    inner class ViewHolder(view: View) : BaseViewHolder(view) {
+        private val binding = ListItemPaymentBinding.bind(view)
 
-            type.title?.let { tvName.text = it }
-          //  type.resource?.let { imgLogo.setImageResource(it) }
+        override fun clear() {
+            binding.tvName.text = ""
+        }
 
-            tvName.setOnClickListener {
-                listener.onClick(type)
+        override fun onBind(position: Int) {
+            with(getItem(position)) {
+                title?.let { binding.tvName.text = it }
+                resource?.let { binding.imgLogo.setImageResource(it) }
+
+                binding.cardBody.setOnClickListener {
+                    clicked?.invoke(this)
+                }
             }
         }
     }
 
-    class PaymentViewHolder(val binding: ListItemTextBinding) : RecyclerView.ViewHolder(binding.root)
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateList(paymentTypeList: MutableList<PaymentTypeModel>) {
-        this.paymentTypeList = paymentTypeList
-        notifyDataSetChanged()
-        Log.d("xxx", "updateList: ${paymentTypeList.size}")
+    fun clicked(clicked: (type: PaymentTypeModel) -> Unit) {
+        this.clicked = clicked
     }
 
-    interface OnClickListener {
-        fun onClick(type: PaymentTypeModel)
+    private object DiffCallback : DiffUtil.ItemCallback<PaymentTypeModel>() {
+        override fun areItemsTheSame(
+            oldItem: PaymentTypeModel,
+            newItem: PaymentTypeModel
+        ): Boolean =
+            oldItem == newItem
+
+        override fun areContentsTheSame(
+            oldItem: PaymentTypeModel,
+            newItem: PaymentTypeModel
+        ): Boolean =
+            oldItem == newItem
     }
 }
+

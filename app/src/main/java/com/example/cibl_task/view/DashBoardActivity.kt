@@ -1,9 +1,6 @@
 package com.example.cibl_task.view
 
 import android.annotation.SuppressLint
-import android.location.Address
-import android.location.Geocoder
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,18 +13,17 @@ import com.example.cibl_task.model.PaymentType
 import com.example.cibl_task.model.PaymentTypeModel
 import com.example.cibl_task.utils.DataSourceUtils
 import com.example.cibl_task.utils.PermissionUtils
+import com.example.cibl_task.utils.with
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import java.util.Locale
 
 class DashBoardActivity : BaseActivity() {
 
     // init all variable
     private lateinit var binding: ActivityDashboardBinding
-    private lateinit var paymentAdapter: PaymentAdapter
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var currentType = PaymentType.Bkash.id
+    private lateinit var paymentAdapter: PaymentAdapter
 
     override fun getLayoutResourceId(): View {
         binding = ActivityDashboardBinding.inflate(layoutInflater)
@@ -35,20 +31,27 @@ class DashBoardActivity : BaseActivity() {
     }
 
     override fun init(savedInstanceState: Bundle?) {
-        fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        paymentAdapter = PaymentAdapter()
 
-        binding.cardBkash.setOnClickListener { checkLocationPermission(PaymentType.Bkash) }
+        binding.listPayment.with(paymentAdapter.apply {
+            clicked {
+                Log.d("xxx", "init: ${it.title}")
+                currentType = it.type.id
+                checkLocationPermission()
 
-        binding.cardNagad.setOnClickListener { checkLocationPermission(PaymentType.Nagad) }
+            }
+        })
 
-        // setData()
+        setData()
 
     }
 
-    private fun checkLocationPermission(type: PaymentType) {
-        currentType = type.id
+    private fun checkLocationPermission() {
+        Log.d("xxx", "checkLocationPermission: ")
         if (PermissionUtils.checkGPSPermission(this)) {
-            checkIsGPSEnable(currentType)
+            Log.d("xxx", "checkLocationPermission: Accepted")
+            checkIsGPSEnable()
 
         } else {
             requestMultiplePermissions.launch(
@@ -62,12 +65,12 @@ class DashBoardActivity : BaseActivity() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun checkIsGPSEnable(type: Int) {
+    private fun checkIsGPSEnable() {
         if (PermissionUtils.isGpsEnable(this)) {
             fusedLocationProviderClient.lastLocation.addOnCompleteListener {
                 val location = it.result
-                DataSourceUtils.saveLocation(this,location)
-                parsePaymentActivity(type)
+                DataSourceUtils.saveLocation(this, location)
+                parsePaymentActivity()
             }
 
         } else {
@@ -76,8 +79,8 @@ class DashBoardActivity : BaseActivity() {
 
     }
 
-    private fun parsePaymentActivity(type: Int) {
-        when (type) {
+    private fun parsePaymentActivity() {
+        when (currentType) {
             PaymentType.Bkash.id -> {
                 invokeActivity(
                     PaymentActivity::class.java, "type",
@@ -105,7 +108,7 @@ class DashBoardActivity : BaseActivity() {
     private val requestMultiplePermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permission ->
             if (permission[PermissionUtils.ACCESS_FINE_LOCATION] == true && permission[PermissionUtils.ACCESS_COARSE_LOCATION] == true) {
-                checkIsGPSEnable(currentType)
+                checkIsGPSEnable()
             } else {
                 Log.d("xxx", "Permission Not Granted")
             }
@@ -114,17 +117,7 @@ class DashBoardActivity : BaseActivity() {
 
 
     private fun setData() {
-        /*paymentAdapter = PaymentAdapter(object : PaymentAdapter.OnClickListener {
-            override fun onClick(type: PaymentTypeModel) {
-                invokeActivity(PaymentActivity::class.java,"type",type)
-            }
-        })
-
-        binding.listPayment.apply {
-            setHasFixedSize(true)
-            adapter = paymentAdapter
-        }
-        paymentAdapter.updateList(MyDataSource.paymentTypeList(this))*/
+        paymentAdapter.submitList(DataSourceUtils.paymentTypeList(this))
     }
 
 }

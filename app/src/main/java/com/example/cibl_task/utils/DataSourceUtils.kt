@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
@@ -13,6 +15,8 @@ import com.example.cibl_task.R
 import com.example.cibl_task.model.PaymentType
 import com.example.cibl_task.model.PaymentTypeModel
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -55,8 +59,8 @@ object DataSourceUtils {
     }
 
     fun getViewToBitmap(view: View): Bitmap {
-        val returnBitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(returnBitmap)
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
 
         val bgDrawable = view.background
 
@@ -66,7 +70,21 @@ object DataSourceUtils {
             canvas.drawColor(Color.WHITE)
         }
         view.draw(canvas)
-        return returnBitmap
+        return bitmap
+    }
+
+    fun createPDF(bitmap:Bitmap): PdfDocument {
+        val document = PdfDocument()
+        val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width, bitmap.height, 1).create()
+        val page = document.startPage(pageInfo)
+        val canvas = page.canvas
+        val paint = Paint()
+        paint.color = Color.WHITE
+        canvas.drawPaint(paint)
+        val newBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.width, bitmap.height, true)
+        canvas.drawBitmap(newBitmap, 0f, 0f, null)
+        document.finishPage(page)
+        return document
     }
 
 
