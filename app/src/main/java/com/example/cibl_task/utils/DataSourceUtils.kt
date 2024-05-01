@@ -9,14 +9,13 @@ import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.location.Geocoder
 import android.location.Location
-import android.util.Log
+import android.os.Build
 import android.view.View
+import androidx.annotation.RequiresApi
 import com.example.cibl_task.R
 import com.example.cibl_task.model.PaymentType
 import com.example.cibl_task.model.PaymentTypeModel
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -37,7 +36,6 @@ object DataSourceUtils {
         )
     }
 
-    @SuppressLint("CommitPrefEdits")
     fun saveLocation(context: Context, location: Location) {
         val geocoder = Geocoder(context, Locale.getDefault())
         val address = geocoder.getFromLocation(location.latitude, location.longitude, 5)

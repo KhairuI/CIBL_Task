@@ -5,15 +5,18 @@ import android.app.Dialog
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.provider.MediaStore.VOLUME_EXTERNAL
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import com.example.cibl_task.base.BaseDialogFragment
 import com.example.cibl_task.databinding.DialogPaymentBinding
@@ -22,6 +25,7 @@ import com.example.cibl_task.model.PaymentModel
 import com.example.cibl_task.utils.DataSourceUtils
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.io.IOException
 import java.util.Objects
 
@@ -78,11 +82,14 @@ class PaymentDialog : BaseDialogFragment() {
         binding.imgShare.setOnClickListener { downloadPDF(ActionType.Share) }
     }
 
+
     private fun downloadPDF(type: ActionType) {
+        val pdfUri: Uri?
         val pdfDocument =
             DataSourceUtils.createPDF(DataSourceUtils.getViewToBitmap(binding.layoutInvoice))
         try {
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // work for android 9 or higher
                 val contentResolver: ContentResolver = requireContext().contentResolver
                 val contentValues = ContentValues()
                 contentValues.put(
@@ -93,29 +100,43 @@ class PaymentDialog : BaseDialogFragment() {
                     MediaStore.MediaColumns.RELATIVE_PATH,
                     Environment.DIRECTORY_DOCUMENTS + File.separator + "CIBLFolder"
                 )
-                val pdfUri = contentResolver.insert(
-                    MediaStore.Files.getContentUri("external"),
+                pdfUri = contentResolver.insert(
+                    MediaStore.Files.getContentUri(VOLUME_EXTERNAL),
                     contentValues
                 )
-
                 val fos = contentResolver.openOutputStream(Objects.requireNonNull(pdfUri)!!)
                 Objects.requireNonNull(fos)
                 pdfDocument.writeTo(fos)
                 pdfDocument.close()
                 fos?.close()
-
-                when (type) {
-                    ActionType.Save -> {
-                        downloadSuccess?.invoke().also { dismiss() }
-                    }
-
-                    ActionType.Share -> {
-                        val share = Intent(Intent.ACTION_SEND)
-                        share.setType("application/pdf")
-                        share.putExtra(Intent.EXTRA_STREAM, pdfUri)
-                        startActivity(Intent.createChooser(share, "Share Via"))
-                    }
+            } else {
+                // work for lower than android 9
+                val path = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + File.separator + "CIBLFolder")
+                if (!path.exists()) {
+                    path.mkdir()
                 }
+                pdfUri = File(path, "CIBL${DataSourceUtils.getCurrentDateTime()}.pdf").toUri()
+                val fos = FileOutputStream(File(path, "CIBL${DataSourceUtils.getCurrentDateTime()}.pdf"))
+                Objects.requireNonNull(fos)
+                pdfDocument.writeTo(fos)
+                pdfDocument.close()
+                fos.close()
+            }
+
+
+            when (type) {
+                ActionType.Save -> {
+                    downloadSuccess?.invoke().also { dismiss() }
+                }
+
+                ActionType.Share -> {
+                    val share = Intent(Intent.ACTION_SEND)
+                    share.setType("application/pdf")
+                    share.putExtra(Intent.EXTRA_STREAM, pdfUri)
+                    startActivity(Intent.createChooser(share, "Share Via"))
+                }
+            }
 
         } catch (e: FileNotFoundException) {
             Log.d("xxx", "Error while writing $e")
@@ -123,6 +144,7 @@ class PaymentDialog : BaseDialogFragment() {
         } catch (e: IOException) {
             throw RuntimeException(e)
         }
+
     }
 
 

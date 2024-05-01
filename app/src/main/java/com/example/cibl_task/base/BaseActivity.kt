@@ -1,7 +1,6 @@
 package com.example.cibl_task.base
 
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -22,26 +21,11 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected abstract fun getLayoutResourceId(): View?
 
-
-    fun invokeActivity(cls: Class<*>?) {
-        val intent = Intent(this, cls)
-        startActivity(intent)
-    }
-
     fun invokeActivity(cls: Class<*>?, key: String, value: PaymentTypeModel) {
         val intent = Intent(this, cls).apply {
             putExtra(key, value)
         }
         startActivity(intent)
-    }
-
-
-    fun invokeActivityAndFinish(cls: Class<*>?) {
-        val intent = Intent(this, cls).apply {
-            flags = FLAG_ACTIVITY_CLEAR_TASK
-        }
-        startActivity(intent)
-        finish()
     }
 
     fun <T : Serializable?> getSerializable(intent: Intent, key: String, className: Class<T>): T {

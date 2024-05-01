@@ -1,6 +1,7 @@
 package com.example.cibl_task.view
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,6 +17,7 @@ import com.example.cibl_task.utils.PermissionUtils
 import com.example.cibl_task.utils.with
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+
 
 class DashBoardActivity : BaseActivity() {
 
@@ -36,32 +38,43 @@ class DashBoardActivity : BaseActivity() {
 
         binding.listPayment.with(paymentAdapter.apply {
             clicked {
-                Log.d("xxx", "init: ${it.title}")
                 currentType = it.type.id
-                checkLocationPermission()
-
+                checkStoragePermissions()
             }
         })
 
         setData()
+    }
 
+    private fun checkStoragePermissions() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+            // need to take storage permissions for android 11 or lower
+            if (PermissionUtils.checkStoragePermission(this)) {
+                checkLocationPermission()
+            } else {
+                requestStoragePermissions.launch(
+                    arrayOf(
+                        PermissionUtils.WRITE_EXTERNAL_STORAGE,
+                        PermissionUtils.READ_EXTERNAL_STORAGE
+                    )
+                )
+            }
+
+        } else { checkLocationPermission() }
     }
 
     private fun checkLocationPermission() {
-        Log.d("xxx", "checkLocationPermission: ")
         if (PermissionUtils.checkGPSPermission(this)) {
-            Log.d("xxx", "checkLocationPermission: Accepted")
             checkIsGPSEnable()
 
         } else {
-            requestMultiplePermissions.launch(
+            requestGpsPermissions.launch(
                 arrayOf(
                     PermissionUtils.ACCESS_FINE_LOCATION,
                     PermissionUtils.ACCESS_COARSE_LOCATION
                 )
             )
         }
-
     }
 
     @SuppressLint("MissingPermission")
@@ -69,14 +82,14 @@ class DashBoardActivity : BaseActivity() {
         if (PermissionUtils.isGpsEnable(this)) {
             fusedLocationProviderClient.lastLocation.addOnCompleteListener {
                 val location = it.result
-                DataSourceUtils.saveLocation(this, location)
-                parsePaymentActivity()
+                DataSourceUtils.saveLocation(this, location).also {
+                    parsePaymentActivity()
+                }
             }
 
         } else {
-            PermissionUtils.enableGps(this)
+            PermissionUtils.turnOnGPS(this)
         }
-
     }
 
     private fun parsePaymentActivity() {
@@ -105,19 +118,26 @@ class DashBoardActivity : BaseActivity() {
         }
     }
 
-    private val requestMultiplePermissions =
+    private val requestGpsPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permission ->
             if (permission[PermissionUtils.ACCESS_FINE_LOCATION] == true && permission[PermissionUtils.ACCESS_COARSE_LOCATION] == true) {
                 checkIsGPSEnable()
             } else {
                 Log.d("xxx", "Permission Not Granted")
             }
-
         }
 
+    private val requestStoragePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permission ->
+            if (permission[PermissionUtils.WRITE_EXTERNAL_STORAGE] == true && permission[PermissionUtils.READ_EXTERNAL_STORAGE] == true) {
+                checkLocationPermission()
+            } else {
+                Log.d("xxx", "Permission Not Granted")
+            }
+
+        }
 
     private fun setData() {
         paymentAdapter.submitList(DataSourceUtils.paymentTypeList(this))
     }
-
 }

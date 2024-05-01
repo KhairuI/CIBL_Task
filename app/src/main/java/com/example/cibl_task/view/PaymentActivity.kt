@@ -33,12 +33,6 @@ class PaymentActivity : BaseActivity() {
                 setDialog()
             }
         }
-        binding.imgLogo.setOnClickListener {
-            binding.inputNumber.setText("01515267153")
-            binding.inputName.setText("Khairul Islam")
-            binding.inputAmount.setText("500")
-            binding.inputNarration.setText("Fund Transfer")
-        }
     }
 
     private fun setDialog() {
